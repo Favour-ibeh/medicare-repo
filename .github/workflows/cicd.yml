@@ -35,7 +35,7 @@ jobs:
       - name: check my ssh key
         run: |
           echo "${{ secrets.SSH_KEY }}" > mykey.pem
-          chomd 600 mykey.pem
+          chmod 600 mykey.pem
           cat mykey.pem
 
           ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@3.89.19.125 "docker pull 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi"
