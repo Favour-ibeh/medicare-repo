@@ -40,4 +40,3 @@ jobs:
 
           ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@3.89.19.125 "docker pull 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi:3"
           ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@3.89.19.125 "docker run -d -p 80:80 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi:3"
-:
