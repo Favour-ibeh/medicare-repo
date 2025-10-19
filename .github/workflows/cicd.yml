@@ -1,43 +1,42 @@
- name: Build and Push to ECR
+name: Build and Push to ECR
 
- on:
-   push:
-     branches:
-       - main
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
 
- jobs:
-   build-push:
-     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-     steps:
-       - name: Checkout code
-         uses: actions/checkout@v3
-
-       - name: Configure AWS credentials
-         run: |
+      - name: Configure AWS credentials
+        run: |
            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
            aws configure set default.region ${{ secrets.AWS_REGION }}
 
-       - name: Login to Amazon ECR
-         run: |
+      - name: Login to Amazon ECR
+        run: |
            aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 938882467274.dkr.ecr.us-east-1.amazonaws.com
 
-       - name: Build, tag, and push image to Amazon ECR
-         run: |
-           docker build -t medi:${{ github.run_number }} .
-           docker tag medi:${{ github.run_number }} 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi:${{ github.run_number }}
-           docker push 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi:${{ github.run_number }}
+      - name: Build, tag, and push image to Amazon ECR
+        run: |
+          docker build -t medi:${{ github.run_number }} .
+          docker tag medi:${{ github.run_number }} 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi:${{ github.run_number }}
+          docker push 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi:${{ github.run_number }}
 
-    deploy:
-      runs-on: ubuntu-latest
-      needs: build-push
-      steps:
-        - name: check my ssh key
-          run: |
-            echo "${{ secrets.SSH_KEY }}" > mykey.pem
-            chomd 600 mykey,pem
-            cat mykey.pem
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-push
+    steps:
+      - name: check my ssh key
+        run: |
+          echo "${{ secrets.SSH_KEY }}" > mykey.pem
+          chomd 600 mykey,pem
+          cat mykey.pem
 
-            ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@3.89.19.125 "docker pull 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi"
-            ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@3.89.19.125 "docker run -d -p 80:80 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi"
+          ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@3.89.19.125 "docker pull 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi"
+          ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@3.89.19.125 "docker run -d -p 80:80 938882467274.dkr.ecr.us-east-1.amazonaws.com/medi"
