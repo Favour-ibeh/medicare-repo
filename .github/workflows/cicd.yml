@@ -35,7 +35,7 @@
       needs: build-push
       steps:
         - name: check my ssh key
-          run:
+          run: |
             echo "${{ secrets.SSH_KEY }}" > mykey.pem
             chomd 600 mykey,pem
             cat mykey.pem
