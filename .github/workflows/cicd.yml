@@ -38,5 +38,5 @@ jobs:
           cat mykey.pem
 
           
-          ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@52.70.163.57 "docker pull 938882467274.dkr.ecr.us-east-1.amazonaws.com/mediplus:${{ github.run_number }}"
-          ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@52.70.163.57 "docker run -d -p 80:80 938882467274.dkr.ecr.us-east-1.amazonaws.com/mediplus:${{ github.run_number }}"
+          ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@52.70.163.57 "docker pull 938882467274.dkr.ecr.us-east-1.amazonaws.com/mediplus"
+          ssh -o StrictHostKeyChecking=no -i mykey.pem ubuntu@52.70.163.57 "docker run -d -p 80:80 938882467274.dkr.ecr.us-east-1.amazonaws.com/mediplus"
